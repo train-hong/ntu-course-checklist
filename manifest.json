@@ -10,7 +10,8 @@
     "content_scripts": [
         {
             "matches": ["https://reg.aca.ntu.edu.tw/*"],
-            "js": ["scripts/content.js"]
+            "js": ["scripts/content.js"],
+            "css": ["styles/content.css"]
         }
     ], 
     "permissions": ["activeTab"], 
