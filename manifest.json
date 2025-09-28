@@ -1,16 +1,25 @@
 {
-    "name": "Hello Extensions",
+    "name": "NTU course checklist",
     "description": "Base Level Extension",
     "version": "1.0",
     "manifest_version": 3,
     "action": {
-        "default_popup": "./popup/popup.html",
+        "default_popup": "popup/popup.html",
         "default_icon": "ntu.png"
     }, 
     "content_scripts": [
         {
-            "matches": ["https://reg.aca.ntu.edu.tw/GradeCheck/StudentGCForm"],
-            "js": ["./scripts/content.js"]
+            "matches": ["https://reg.aca.ntu.edu.tw/*"],
+            "js": ["scripts/content.js"]
         }
-    ]
+    ], 
+    "permissions": ["activeTab"], 
+    "commands": {
+        "_execute_action": {
+            "suggested_key": {
+                "default": "Ctrl+B",
+                "mac": "Command+B"
+            }
+        }
+    }
 }
