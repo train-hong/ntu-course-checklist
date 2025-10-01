@@ -2,7 +2,9 @@ const DESIGNATED_SCOPE_NUM = 3;
 const DESIGNATED_SCOPES = new Set([1, 2, 3, 5, 8]);
 
 /**
- * @param {Object} generalCourses - the input general courses
+ * @param {Object<string, Set<number>>} generalCourses - 
+ *  An object mapping course names to sets of scope number
+ *  Example: { "math": new Set([1, 2]), "history": new Set([3, 5]) }
  * @returns {Object} result - The result object
  * @returns {boolean} result.fulfil - Whether it fulfill
  * @returns {number[]} result.needScope - Scopes still needed
