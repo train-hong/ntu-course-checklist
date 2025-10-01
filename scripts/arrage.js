@@ -1,5 +1,10 @@
-const DESIGNATED_SCOPE_NUM = 3;
-const DESIGNATED_SCOPES = new Set([1, 2, 3, 5, 8]);
+const DEPARTMENT_REQUIRED_CREDITS = 51;  // 系定必修學分
+const TOTAL_SELECTIVE_CREDITS = 53       // 選修總學分
+const DEPARTMENT_SELECTIVE_CREDITS = 21; // 系內選修學分
+const COLLEGE_SELECTIVE_CREDITS = 9;     // 院內選修學分
+const GEN_CREDITS = 15;                  // 通識學分
+const GEN_SCOPE_NUM = 3;
+const GEN_SCOPES = new Set([1, 2, 3, 5, 8]);
 
 /**
  * @param {Object<string, Set<number>>} generalCourses - 
