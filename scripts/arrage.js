@@ -36,55 +36,67 @@ const GEN_SCOPES = new Set([1, 2, 3, 5, 8]);
 /**
  * Arrange courses into some order.
  * @param {Courses} courses - The courses data object.
- * @returns {any} The arranged result.
- */
-function arrange(courses) {
-    // 體育、共同必修不用處理
-    // 一般選修、通識
-    // 系必修、院選修、系選修以溢出處理即可
-    // 我覺得要先處理系必修、系選修、院選修、一般選修，因為通識課程是否要移動到一般選修取決於一般選修的學分數
-
-    // handle 系必修、系選修、院選修、一般選修
-    if (courses["系必修"].length > DEPARTMENT_REQUIRED_CREDITS) {
-      // TODO
-    }
-    
-    while (courses["系選修"].length > DEPARTMENT_SELECTIVE_CREDITS) {
-      courses["院選修"].push(courses["系選修"].pop());
-    }
-    
-    while (courses["院選修"].length > COLLEGE_SELECTIVE_CREDITS) {
-      courses["一般選修"].push(courses["院選修"].pop());
-    }
-    
-    // handle 通識
-    generalResults = fulfilGeneral(courses["通識"]);
-    
-    if (generalResults["fulfil"] == true) {
-        
-    } 
-    
-    
-    
-    return arranged_courses
-}
-
-function remain(arranged_courses) {
-    // return courses, number of credits to take
-
-/*
-number of credits to take = { "共同必修課程": 3, "通識": {
-    "credit remaining": 6, 
-    "number of scopes type remaining": 2
-    "scopes lack": ["1", "2", "3", "5"]
-}, ...}
+ * @returns {Courses} returnCourses - The arranged result.
 */
+function arrange(courses) {
+  // 體育、共同必修不用處理
+  // 一般選修、通識
+  // 系必修、院選修、系選修以溢出處理即可
+  // 我覺得要先處理系必修、系選修、院選修、一般選修，因為通識課程是否要移動到一般選修取決於一般選修的學分數
+  
+  // handle 系必修、系選修、院選修、一般選修
+  if (courses["系必修"].length > DEPARTMENT_REQUIRED_CREDITS) {
+    // TODO: 只有「專題研究」、「計算機網路實驗/計算機系統實驗」能溢出到系選修
     
+  }
+  
+  while (courses["系選修"].length > DEPARTMENT_SELECTIVE_CREDITS) {
+    courses["院選修"].push(courses["系選修"].pop());
+  }
+  
+  while (courses["院選修"].length > COLLEGE_SELECTIVE_CREDITS) {
+    courses["一般選修"].push(courses["院選修"].pop());
+  }
+  
+  return arranged_courses
 }
-
+/**
+ * @typedef {Object} CourseCredits
+ * @property {number} RequiredCredit
+ * @property {number} TakenCredit
+ * @property {number} RemainingCredit
+ * @property {boolean} Fulfil - for 通識
+ * @property {number[]} NeedScope - for 通識
+ */
 
 /**
- * @param {Object<string, Set<number>>} generalCourses - 
+ * @param {Courses} arranged_courses
+ * @returns {CourseCredits[]} remainCredits
+ */
+function remain(arranged_courses) {
+  // return courses, number of credits to take
+  let results = {};
+
+  let generalResults = fulfilGeneral(arranged_courses["通識"]);
+  
+  for (const [category, courseList] of Object.entries(arranged_courses)) {
+    let takenCredits = courseList.reduce((sum, course) => sum + course.credit, 0);
+    results[category] = {
+      RequiredCredit: category === "通識" ? GEN_CREDITS :
+                      category === "系必修" ? DEPARTMENT_REQUIRED_CREDITS :
+                      category === "系選修" ? DEPARTMENT_SELECTIVE_CREDITS :
+                      category === "院選修" ? COLLEGE_SELECTIVE_CREDITS :
+                      category === "一般選修" ? TOTAL_SELECTIVE_CREDITS : 0,
+      TakenCredit: takenCredits,
+      RemainingCredit: Math.max(0, courseList[0].credit - takenCredits),
+      Fulfil: category === "通識" ? generalResults.fulfil : null,
+      NeedScope: category === "通識" ? generalResults.needScope : null
+    };
+  }
+}
+
+/**
+ * @param {GeneralCourse[]} generalCourses - 
  *  An object mapping course names to sets of scope number
  *  Example: { "math": new Set([1, 2]), "history": new Set([3, 5]) }
  * @returns {Object} result - The result object
