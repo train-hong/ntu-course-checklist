@@ -62,25 +62,25 @@ function arrange(courses) {
 }
 /**
  * @typedef {Object} CourseCredits
- * @property {number} RequiredCredit
- * @property {number} TakenCredit
- * @property {number} RemainingCredit
- * @property {boolean} Fulfil - for 通識
- * @property {number[]} NeedScope - for 通識
+ * @property {number} requiredCredit
+ * @property {number} takenCredit
+ * @property {number} remainingCredit
+ * @property {boolean} fulfil - for 通識
+ * @property {number[]} needScope - for 通識
  */
 
 /**
  * @param {Courses} arrangedCourses
- * @returns {CourseCredits[]} remainCredits
+ * @returns {CourseCredits[]} credits
  */
 function remain(arrangedCourses) {
   // return courses, number of credits to take
-  let remainCourses = {};
+  let credits = {};
   let generalResults = fulfilGeneral(arrangedCourses["通識"]);
   
   for (const [category, courseList] of Object.entries(arrangedCourses)) {
     let takenCredits = courseList.reduce((sum, course) => sum + course.credit, 0);
-    remainCourses[category] = {
+    credits[category] = {
       RequiredCredit: category === "通識" ? GEN_CREDITS :
                       category === "系必修" ? DEPARTMENT_REQUIRED_CREDITS :
                       category === "系選修" ? DEPARTMENT_SELECTIVE_CREDITS :
@@ -92,7 +92,7 @@ function remain(arrangedCourses) {
       NeedScope: category === "通識" ? generalResults.needScope : null
     };
   }
-  return remainCourses;
+  return credits;
 }
 
 /**
@@ -143,3 +143,5 @@ function fulfilGeneral(generalCourses) {
     return { fulfil: false, needScope: missing };
   }
 }
+
+export { arrange, remain, fulfilGeneral };
