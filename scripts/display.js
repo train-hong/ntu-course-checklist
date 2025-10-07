@@ -7,7 +7,7 @@ function display(arrangedCourses, credits) {
   const tableLayout = [
     ["共同必修", "體育"],
     ["一般選修", "通識"],
-    ["系訂必修", "系內選修", "院內選修"]
+    ["系訂必修", "系選修", "院選修"]
   ];
 
   const wrapper = document.createElement("div");
@@ -24,7 +24,7 @@ function display(arrangedCourses, credits) {
     rowTitles.forEach(title => {
       const cellDiv = document.createElement("div");
       cellDiv.classList.add("cell");
-      cellDiv.appendChild(createTableContainer(title));
+      cellDiv.appendChild(createTableContainer(title, arrangedCourses[title], credits[title]));
       rowDiv.appendChild(cellDiv);
     });
 
@@ -47,9 +47,6 @@ function display(arrangedCourses, credits) {
  * @returns {HTMLElement} The table container element.
  */
 function createTableContainer(title, courses, credits) {
-  // preprocess courses and credits to populate the table if needed
-
-
 
   const container = document.createElement("div");
   container.classList.add("table-container");
@@ -94,6 +91,8 @@ function createTableContainer(title, courses, credits) {
     `;
     container.appendChild(infoDiv);
   }
+
+  // TODO: Add general and required remarks display
 
   return container;
 }

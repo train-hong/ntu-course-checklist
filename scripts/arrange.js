@@ -32,11 +32,29 @@ const COLLEGE_SELECTIVE_CREDITS = 9;     // 院選修學分
 const GEN_CREDITS = 15;                  // 通識學分
 const GEN_SCOPE_NUM = 3;
 const GEN_SCOPES = new Set([1, 2, 3, 5, 8]);
+const REQUIRED_COURSES = new Set([
+  "微積分1",
+  "微積分2",
+  "微積分3",
+  "微積分4",
+  "資料結構與演算法",
+  "線性代數",
+  "機率",
+  "演算法設計與分析",
+  "系統程式設計",
+  "人工智慧導論",
+  "作業系統",
+  "專題研究",
+  "計算機網路",
+  "自動機與形式語言",
+  "計算機結構",
+  "計算機程式設計"
+]);
 
 /**
  * Arrange courses into some order.
  * @param {Courses} courses - The courses data object.
- * @returns {Courses} returnCourses - The arranged result.
+ * @returns {Courses} arrangedCourses - The arranged result.
 */
 function arrange(courses) {
   // 體育、共同必修不用處理
@@ -45,23 +63,35 @@ function arrange(courses) {
   // 我覺得要先處理系必修、系選修、院選修、一般選修，因為通識課程是否要移動到一般選修取決於一般選修的學分數
   
   // handle 系必修、系選修、院選修、一般選修
-  if (courses["系必修"].length > DEPARTMENT_REQUIRED_CREDITS) {
-    // TODO: 只有「專題研究」、「計算機網路實驗/計算機系統實驗」能溢出到系選修
-    
+  let arrangedCourses = { ...courses };
+
+  while (courses["系必修"].count(course => course.name == "專題研究") > 1) {
+    const idx = courses["系必修"].map(course => course.name).lastIndexOf("專題研究");
+    arrangedCourses["系選修"].push(courses["系必修"].splice(idx, 1)[0]);
+  }
+
+  if (courses["系必修"].find(course => course.name == "計算機系統實驗") && courses["系必修"].find(course => course.name == "計算機網路實驗")) {
+    const idx = courses["系必修"].map(course => course.name).lastIndexOf("計算機網路實驗");
+    arrangedCourses["系選修"].push(courses["系必修"].splice(idx, 1)[0]);
+  }
+
+  while (courses["系必修"].count(course => course.name.startsWith("普通")) > 1) {
+    const idx = courses["系必修"].map(course => course.name).lastIndexOf(courses["系必修"].find(course => course.name.startsWith("普通")));
+    arrangedCourses["系選修"].push(courses["系必修"].splice(idx, 1)[0]);
   }
   
   while (courses["系選修"].length > DEPARTMENT_SELECTIVE_CREDITS) {
-    courses["院選修"].push(courses["系選修"].pop());
+    arrangedCourses["院選修"].push(courses["系選修"].pop());
   }
   
   while (courses["院選修"].length > COLLEGE_SELECTIVE_CREDITS) {
-    courses["一般選修"].push(courses["院選修"].pop());
+    arrangedCourses["一般選修"].push(courses["院選修"].pop());
   }
   
-  return arrangedCourses
+  return arrangedCourses;
 }
 /**
- * @typedef {Object} CourseCredits
+ * @typedef {Object} Credit
  * @property {number} requiredCredit
  * @property {number} takenCredit
  * @property {number} remainingCredit
@@ -70,8 +100,22 @@ function arrange(courses) {
  */
 
 /**
+ * @typedef {Object} GeneralRemarks
+ * @property {boolean} fulfil - for 通識
+ * @property {number[]} needScope - for 通識
+ */
+
+/**
+ * @typedef {Object} RequiredRemarks
+ * @property {string[]} missingRequired - for 系必修
+ * @property {string[]} missingCommonRequired - for 共同必修
+ */
+
+/**
  * @param {Courses} arrangedCourses
- * @returns {CourseCredits[]} credits
+ * @returns {Credit[]} credits
+ * @returns {GeneralRemarks} generalRemarks
+ * @returns {RequiredRemarks} requiredRemarks
  */
 function remain(arrangedCourses) {
   // return courses, number of credits to take
@@ -88,10 +132,21 @@ function remain(arrangedCourses) {
                       category === "一般選修" ? TOTAL_SELECTIVE_CREDITS : 0,
       TakenCredit: takenCredits,
       RemainingCredit: Math.max(0, courseList[0].credit - takenCredits),
-      Fulfil: category === "通識" ? generalResults.fulfil : null,
-      NeedScope: category === "通識" ? generalResults.needScope : null
     };
   }
+
+  let generalRemarks = {
+    Fulfil: generalResults.fulfil,
+    NeedScope: generalResults.needScope
+  };
+
+  let requiredRemarks = {
+    MissingRequired: arrangedCourses["系必修"].filter(c => REQUIRED_COURSES.has(c.name)).map(c => c.name),
+    // need fix: MissingCommonRequired: arrangedCourses["共同必修"].filter(c => REQUIRED_COURSES.has(c.name)).map(c => c.name)
+  };
+
+  credits["通識"] = { ...credits["通識"], ...generalRemarks };
+  credits["系必修"] = { ...credits["系必修"], ...requiredRemarks };
   return credits;
 }
 
