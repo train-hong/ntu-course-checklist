@@ -58,7 +58,7 @@ function arrange(courses) {
     courses["一般選修"].push(courses["院選修"].pop());
   }
   
-  return arranged_courses
+  return arrangedCourses
 }
 /**
  * @typedef {Object} CourseCredits
@@ -70,16 +70,16 @@ function arrange(courses) {
  */
 
 /**
- * @param {Courses} arranged_courses
+ * @param {Courses} arrangedCourses
  * @returns {CourseCredits[]} remainCredits
  */
-function remain(arranged_courses) {
+function remain(arrangedCourses) {
   // return courses, number of credits to take
   let results = {};
 
-  let generalResults = fulfilGeneral(arranged_courses["通識"]);
+  let generalResults = fulfilGeneral(arrangedCourses["通識"]);
   
-  for (const [category, courseList] of Object.entries(arranged_courses)) {
+  for (const [category, courseList] of Object.entries(arrangedCourses)) {
     let takenCredits = courseList.reduce((sum, course) => sum + course.credit, 0);
     results[category] = {
       RequiredCredit: category === "通識" ? GEN_CREDITS :
