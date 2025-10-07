@@ -75,13 +75,12 @@ function arrange(courses) {
  */
 function remain(arrangedCourses) {
   // return courses, number of credits to take
-  let results = {};
-
+  let remainCourses = {};
   let generalResults = fulfilGeneral(arrangedCourses["通識"]);
   
   for (const [category, courseList] of Object.entries(arrangedCourses)) {
     let takenCredits = courseList.reduce((sum, course) => sum + course.credit, 0);
-    results[category] = {
+    remainCourses[category] = {
       RequiredCredit: category === "通識" ? GEN_CREDITS :
                       category === "系必修" ? DEPARTMENT_REQUIRED_CREDITS :
                       category === "系選修" ? DEPARTMENT_SELECTIVE_CREDITS :
@@ -93,6 +92,7 @@ function remain(arrangedCourses) {
       NeedScope: category === "通識" ? generalResults.needScope : null
     };
   }
+  return remainCourses;
 }
 
 /**
