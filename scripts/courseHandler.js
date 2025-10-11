@@ -151,11 +151,14 @@ function computeRemainingCredits(arrangedCourses) {
 }
 
 /**
- * @param
+ * @param {Credit} credit
+ * @param {Courses} courses
  * @returns {Remarks} remarks
  */
 
-function addCourseRemarks() {}
+function addCourseRemarks(credit, courses) {
+  
+}
 
 /**
  * @param {GeneralCourse[]} generalCourses - 
