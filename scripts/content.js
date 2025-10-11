@@ -40,9 +40,9 @@ function createTableContainer(title) {
 }
 
 const tableLayout = [
-  ["共同必修", "體育"],
+  ["共同必修", "系訂必修"],
   ["通識", "一般選修"],
-  ["系訂必修", "系內選修", "院內選修"]
+  ["系內選修", "院內選修"]
 ];
 
 const wrapper = document.createElement("div");
