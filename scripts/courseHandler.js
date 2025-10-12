@@ -47,7 +47,7 @@ function arrangeCourses(rawCourses) {
   console.log(rawCourses.系訂必修.map(c => c.name));
 
   let courses = { 共同必修: [], 通識: [], 系訂必修: [], 系選修: [], 院選修: [], 一般選修: [] }; 
-  courses.共同必修 = rawCourses.共同必修;
+  courses.共同必修 = rawCourses.共同必修課程;
   courses.系訂必修 = rawCourses.系訂必修;
   courses.通識 = rawCourses.通識;
 

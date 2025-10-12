@@ -1,5 +1,5 @@
 {
-  "共同必修": [
+  "共同必修課程": [
     { "name": "大學國文：閱讀與寫作（一）", "credit": 3, "semester": "112/1", "code": "CHIN 8016", "category": "國文", "grade": "A" },
     { "name": "英文一", "credit": 3, "semester": "111/1", "code": "FL 1003", "category": "外文", "grade": "A-" },
     { "name": "英文二", "credit": 3, "semester": "111/2", "code": "FL 1004", "category": "外文", "grade": "A" },

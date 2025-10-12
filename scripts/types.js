@@ -14,7 +14,7 @@
 /**
  * Courses extracted directly from html
  * @typedef {Object} RawCourses
- * @property {Course[]} 共同必修
+ * @property {Course[]} 共同必修課程
  * @property {Course[]} 系訂必修
  * @property {Course[]} 通識
  * @property {Course[]} 指定選修與一般選修
