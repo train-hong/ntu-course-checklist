@@ -5,7 +5,8 @@
  * @property {string} name - 科目名稱
  * @property {string} code - 課號
  * @property {number} credit - 學分
- * @property {number} [splitCredit] - 拆分學分
+ * @property {string} grade - 成績
+ * @property {number} [originCredit] - 原學分
  * @property {boolean} [star] - 通識星號
  * @property {number[]} [scopes] - 通識領域
  */

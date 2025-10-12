@@ -43,50 +43,31 @@ const COLLEGE_PREFIXES = ["EE", "OE", "CommE", "EEE", "BEEI"];
  * @returns {Courses} courses - The arranged result.
 */
 function arrangeCourses(rawCourses) {
+  removeFailedAndWithdrawnCourses(rawCourses);
+  console.log(rawCourses.系訂必修.map(c => c.name));
+
   let courses = { 共同必修: [], 通識: [], 系訂必修: [], 系選修: [], 院選修: [], 一般選修: [] }; 
   courses.共同必修 = rawCourses.共同必修;
   courses.系訂必修 = rawCourses.系訂必修;
   courses.通識 = rawCourses.通識;
 
-  // course type flow: 系訂必修 -> 系選修 -> 院選修 -> 一般選修
-  // 通識、國文、基本能力、專題、指定選修與一般選修
-  
   // 國文 -> 通識
   if (courses.共同必修.filter(c => c.category === "國文").reduce((acc, c) => acc + c.credit, 0) > 3) {
     const idx = courses.共同必修.map(c => c.category).lastIndexOf("國文");
-    let rearrangedChinese = courses.共同必修.splice(idx, 1)[0];
-    rearrangedChinese.scope = [1, 2, 3, 4];
-    courses.通識.push(rearrangedChinese);
+    let rearrangedCN = courses.共同必修.splice(idx, 1)[0];
+    rearrangedCN.scope = [1, 2, 3, 4];
+    courses.通識.push(rearrangedCN);
   }
 
   // 基本能力 -> 通識/一般選修
   let genCredits = courses.通識.reduce((acc, c) => acc + c.credit, 0);
   let basicInGen = courses.通識.filter(c => c.category === "基本能力").reduce((acc, c) => acc + c.credit, 0);
   let movedBasicCredit = Math.min(Math.max(0, basicInGen - 6, genCredits - GEN_CREDITS), basicInGen);
-  while (movedBasicCredit > 0) {
-    const rearrangedBasic = courses.通識.filter(c => c.category === "基本能力").pop();
-    rearrangedBasic.scope = [];
-    
-    if (rearrangedBasic.credit <= movedBasicCredit) {
-      // move the whole course
-      courses.一般選修.push(rearrangedBasic);
-      movedBasicCredit -= rearrangedBasic.credit;
-    } else {
-      // split the course
-      const movedSplitCourse = { ...rearrangedBasic, splitCredit: movedBasicCredit };
-      const remainSplitCourse = { ...rearrangedBasic, splitCredit: rearrangedBasic.credit - movedBasicCredit };
-      courses.通識.push(remainSplitCourse);
-      courses.一般選修.push(movedSplitCourse);
-      movedBasicCredit = 0;
-    }
+  for (const course of courses.通識.filter(c => c.category === "基本能力")) {
+    course.scopes = [];
+    course.star = true;
   }
-
-  // 通識 -> 系選修
-  for (const course of courses.通識) {
-    if (course.code.startsWith("CSIE")) {
-      courses.系選修.push(course);
-    }  
-  }  
+  moveOverflowCredits(movedBasicCredit, courses.通識.filter(c => c.category === "基本能力"), courses.一般選修);
   
   // 專題 -> 系選修
   for (const course of rawCourses.不計學分) {
@@ -106,6 +87,14 @@ function arrangeCourses(rawCourses) {
     }  
   }  
 
+  // 通識 -> 系選修
+  for (const course of courses.通識) {
+    if (course.code.startsWith("CSIE")) {
+      courses.系選修.push(course);
+      courses.通識.splice(courses.通識.indexOf(course), 1);
+    }
+  }  
+  
   // 系必修 -> 系選修（溢出）
   if (courses.系訂必修.find(c => c.name == "計算機系統實驗") && courses.系訂必修.find(c => c.name == "計算機網路實驗")) {
     const idx = courses.系訂必修.map(c => c.name).lastIndexOf("計算機網路實驗");
@@ -113,69 +102,22 @@ function arrangeCourses(rawCourses) {
   }
   
   // 系必修 -> 一般選修（溢出）
-  while (courses.系訂必修.filter(c => c.name.startsWith("普通")).reduce((acc, c) => acc + c.credit, 0) > 6) {
-    const idx = courses.系訂必修.map(c => c.name).lastIndexOf(courses.系訂必修.find(c => c.name.startsWith("普通")));
-    courses.系選修.push(courses.系訂必修.splice(idx, 1)[0]);
+  let movedGenSciCredits = courses.系訂必修.filter(c => c.name.startsWith("普通")).reduce((acc, c) => acc + c.credit, 0) - 6;
+  if (movedGenSciCredits > 0) {
+    moveOverflowCredits(courses.系訂必修.filter(c => c.name.startsWith("普通")), courses.一般選修, 6);
   }
+  // console.log(courses.系選修);
   
   // 系選修 -> 院選修（溢出）
-  let movedDeptSelCredits = courses.系選修.reduce((acc, c) => acc + c.credit, 0) - DEPT_SEL_CREDITS;
-  while (movedDeptSelCredits > 0) {
-    const rearrangedDeptSel = courses.系選修.pop();
-    
-    if (rearrangedDeptSel.credit <= movedDeptSelCredits) {
-      courses.院選修.push(rearrangedDeptSel);
-      movedDeptSelCredits -= rearrangedDeptSel.credit;
-    } else {
-      const splitDeptSel = { ...rearrangedDeptSel, credit: movedDeptSelCredits };
-      const remainDeptSel = { ...rearrangedDeptSel, credit: rearrangedDeptSel.credit - movedDeptSelCredits };
-      courses.院選修.push(splitDeptSel);
-      courses.系選修.push(remainDeptSel);
-      movedDeptSelCredits = 0;
-    }
-  }
+  moveOverflowCredits(courses.系選修.reduce((acc, c) => acc + c.credit, 0) - DEPT_SEL_CREDITS, courses.系選修, courses.院選修, DEPT_SEL_CREDITS);
+  // console.log(courses.院選修);
   
   // 院選修 -> 一般選修（溢出）
-  let movedCollegeSelCredits = courses.院選修.reduce((acc, c) => acc + c.credit, 0) - COLLEGE_SEL_CREDITS;
-  while (movedCollegeSelCredits > 0) {
-    const rearrangedCollegeSel = courses.院選修.pop();
-    
-    if (rearrangedCollegeSel.credit <= movedCollegeSelCredits) {
-      courses.一般選修.push(rearrangedCollegeSel);
-      movedCollegeSelCredits -= rearrangedCollegeSel.credit;
-    } else {
-      const splitCollegeSel = { ...rearrangedCollegeSel, credit: movedCollegeSelCredits };
-      const remainCollegeSel = { ...rearrangedCollegeSel, credit: rearrangedCollegeSel.credit - movedCollegeSelCredits };
-      courses.一般選修.push(splitCollegeSel);
-      courses.院選修.push(remainCollegeSel);
-      movedCollegeSelCredits = 0;
-    }
-  }
+  moveOverflowCredits(courses.院選修.reduce((acc, c) => acc + c.credit, 0) - COLLEGE_SEL_CREDITS, courses.院選修, courses.一般選修, COLLEGE_SEL_CREDITS);
+  // console.log(courses.一般選修);
 
   // 通識 -> 一般選修
-  let fulfillGen = fulfillGeneralRequirements(courses.通識).fulfill;
-  let movedGenCredits = courses.通識.reduce((acc, c) => acc + c.credit, 0) - GEN_CREDITS;
-  while (movedGenCredits > 0 && courses.通識.filter(c => c.star).length > 0) {
-    for (const course of courses.通識) {
-
-      let fullfillGenWithoutThis = fulfillGeneralRequirements(courses.通識.filter(c => c !== course)).fulfill;
-      if (course.star === false || !fullfillGenWithoutThis && fulfillGen) {
-        continue;
-      }
-
-      const rearrangedGen = courses.通識.splice(courses.通識.indexOf(course), 1)[0];
-      if (rearrangedGen.credit <= movedGenCredits) {
-        courses.一般選修.push(rearrangedGen);
-        movedGenCredits -= rearrangedGen.credit;
-      } else {
-        const splitGen = { ...rearrangedGen, credit: movedGenCredits };
-        const remainGen = { ...rearrangedGen, credit: rearrangedGen.credit - movedGenCredits };
-        courses.一般選修.push(splitGen);
-        courses.通識.push(remainGen);
-        movedGenCredits = 0;
-      }
-    }
-  }
+  moveOverflowGenCredits(courses);
 
   return courses;
 }
@@ -325,6 +267,77 @@ function fulfillGeneralRequirements(generalCourses) {
     const matchedScopes = new Set(Object.keys(matchR).map(Number));
     const missing = [...GEN_SCOPES].filter(s => !matchedScopes.has(s));
     return { fulfill: false, needScope: missing };
+  }
+}
+
+/**
+ * Moves overflow credits from one course category to another.
+ * @param {Course[]} source - The source category
+ * @param {Course[]} target - The target category
+ * @param {number} sourceLimit - The maximum allowed credits in the source
+ */
+function moveOverflowCredits(overflow, source, target) {
+
+  while (overflow > 0) {
+    const course = source.pop();
+
+    if (course.credit <= overflow) {
+      target.push(course);
+      overflow -= course.credit;
+    } else {
+      const splitCredit = overflow;
+      const movedPart = { ...course, credit: splitCredit, originCredit: course.credit };
+      const remainPart = { ...course, credit: course.credit - splitCredit, originCredit: course.credit };
+      target.push(movedPart);
+      source.push(remainPart);
+      overflow = 0;
+    }
+  }
+}
+
+/**
+ * Moves overflow general education credits to selective courses.
+ * @param {Courses} courses
+ */
+function moveOverflowGenCredits(courses) {
+  let overflow = courses.通識.reduce((acc, c) => acc + c.credit, 0) - GEN_CREDITS;
+
+  while (overflow > 0 && courses.通識.filter(c => c.star).length > 0) {
+    for (const course of courses.通識) {
+
+      let fullfillGenWithoutThis = fulfillGeneralRequirements(courses.通識.filter(c => c !== course)).fulfill;
+      let fulfillGen = fulfillGeneralRequirements(courses.通識).fulfill;
+      if (course.star === false || !fullfillGenWithoutThis && fulfillGen) {
+        continue;
+      }
+
+      const rearrangedGen = courses.通識.splice(courses.通識.indexOf(course), 1)[0];
+      if (rearrangedGen.credit <= overflow) {
+        courses.一般選修.push(rearrangedGen);
+        overflow -= rearrangedGen.credit;
+      } else {
+        const splitCredit = overflow;
+        const splitGen = { ...rearrangedGen, credit: splitCredit, originCredit: rearrangedGen.credit };
+        const remainGen = { ...rearrangedGen, credit: rearrangedGen.credit - splitCredit, originCredit: rearrangedGen.credit };
+        courses.一般選修.push(splitGen);
+        courses.通識.push(remainGen);
+        overflow = 0;
+      }
+    }
+  }
+}
+
+/**
+ * Remove failed (F) and withdrawn (停修) courses from the rawCourses object.
+ * @param {RawCourses} rawCourses
+ */
+function removeFailedAndWithdrawnCourses(rawCourses) {
+  for (const category of Object.keys(rawCourses)) {
+    for (const course of rawCourses[category]) {
+      if (course.grade === "(停修)" || course.grade === "(F)") {
+        rawCourses[category].splice(rawCourses[category].indexOf(course), 1);
+      }
+    }
   }
 }
 
