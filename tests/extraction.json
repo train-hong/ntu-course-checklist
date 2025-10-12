@@ -36,17 +36,17 @@
     { "name": "普通物理學甲下", "credit": 3, "semester": "111/2", "code": "Phys 1007" }
   ],
   "通識": [
-    { "name": "歐盟莫內講座--經濟貨幣整合：歐盟理論與實證", "credit": 3, "semester": "112/1", "code": "NtlDev 1099", "star": false, "scope": [2, 5] },
-    { "name": "文化人類學丙", "credit": 3, "semester": "113/2", "code": "Anth 2003", "star": true, "scope": [3, 5] },
-    { "name": "現代科學與心靈科學", "credit": 3, "semester": "112/2", "code": "CSIE 1923", "star": true, "scope": [4] },
-    { "name": "探索臺灣:臺灣電影與臺灣社會", "credit": 2, "semester": "111/2", "code": "LibEdu 1050", "star": false, "scope": [5] },
-    { "name": "普通心理學", "credit": 3, "semester": "111/1", "code": "Psy 1007", "star": true, "scope": [5, 8] },
-    { "name": "統計Let's GO", "credit": 3, "semester": "112/2", "code": "IMPS 1002", "star": false, "scope": [6] },
-    { "name": "海洋科學概論", "credit": 2, "semester": "113/1", "code": "Ocean 5008", "star": true, "scope": [7] },
-    { "name": "毒道之處～看不見的危機!", "credit": 2, "semester": "111/2", "code": "Tox 5009", "star": false, "scope": [7, 8] },
-    { "name": "幸福與人生", "credit": 3, "semester": "111/2", "code": "Psy 1012", "star": false, "scope": [8] },
-    { "name": "農村生活臺語會話", "credit": 2, "semester": "112/1", "code": "MSPM 5026", "star": false, "scope": [8] },
-    { "name": "食品與健康", "credit": 2, "semester": "113/1", "code": "FOOD 1001", "star": true, "scope": [8] }
+    { "name": "歐盟莫內講座--經濟貨幣整合：歐盟理論與實證", "credit": 3, "semester": "112/1", "code": "NtlDev 1099", "star": false, "scopes": [2, 5] },
+    { "name": "文化人類學丙", "credit": 3, "semester": "113/2", "code": "Anth 2003", "star": true, "scopes": [3, 5] },
+    { "name": "現代科學與心靈科學", "credit": 3, "semester": "112/2", "code": "CSIE 1923", "star": true, "scopes": [4] },
+    { "name": "探索臺灣:臺灣電影與臺灣社會", "credit": 2, "semester": "111/2", "code": "LibEdu 1050", "star": false, "scopes": [5] },
+    { "name": "普通心理學", "credit": 3, "semester": "111/1", "code": "Psy 1007", "star": true, "scopes": [5, 8] },
+    { "name": "統計Let's GO", "credit": 3, "semester": "112/2", "code": "IMPS 1002", "star": false, "scopes": [6] },
+    { "name": "海洋科學概論", "credit": 2, "semester": "113/1", "code": "Ocean 5008", "star": true, "scopes": [7] },
+    { "name": "毒道之處～看不見的危機!", "credit": 2, "semester": "111/2", "code": "Tox 5009", "star": false, "scopes": [7, 8] },
+    { "name": "幸福與人生", "credit": 3, "semester": "111/2", "code": "Psy 1012", "star": false, "scopes": [8] },
+    { "name": "農村生活臺語會話", "credit": 2, "semester": "112/1", "code": "MSPM 5026", "star": false, "scopes": [8] },
+    { "name": "食品與健康", "credit": 2, "semester": "113/1", "code": "FOOD 1001", "star": true, "scopes": [8] }
   ],
   "基本能力": [],
   "指定選修與一般選修": [

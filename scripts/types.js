@@ -7,7 +7,7 @@
  * @property {number} credit - 學分
  * @property {number} [splitCredit] - 拆分學分
  * @property {boolean} [star] - 通識星號
- * @property {number[]} [scope] - 通識領域
+ * @property {number[]} [scopes] - 通識領域
  */
 
 /**
@@ -16,9 +16,10 @@
  * @property {Course[]} 共同必修
  * @property {Course[]} 系訂必修
  * @property {Course[]} 通識
- * @property {Course[]} 基本能力
  * @property {Course[]} 指定選修與一般選修
  * @property {Course[]} 不計學分
+ * @property {Course[]} 輔系課程
+ * @property {Course[]} 雙主修課程
  */
 
 /**
@@ -65,5 +66,5 @@
  * 系訂必修備注、共同必修備注、通識備注
  * @typedef {Object} Remarks
  * @property {string} 系訂必修
- * @property {number[]} generalNeedScope - 通識缺領域備注
+ * @property {string} 通識
  */

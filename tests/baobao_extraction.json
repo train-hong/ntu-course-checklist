@@ -1,0 +1,70 @@
+{
+  "共同必修": [
+    { "category": "進階英語", "semester": "112/1", "name": "進階英語一", "code": "AdvEng 2011", "credit": 0 },
+    { "category": "進階英語", "semester": "112/1", "name": "進階英語二", "code": "AdvEng 2012", "credit": 0 },
+    { "category": "國文", "semester": "112/1", "name": "大學國文：閱讀與寫作（一）", "code": "CHIN 8016", "credit": 3 },
+    { "category": "外文", "semester": "112/1", "name": "英文(附一小時英聽)一", "code": "FL 1007", "credit": 3 },
+    { "category": "外文", "semester": "112/2", "name": "英文(附一小時英聽)二", "code": "FL 1008", "credit": 3 },
+    { "category": "服務", "semester": "112/2", "name": "服務學習一", "code": "PS 1001", "credit": 0 },
+    { "category": "服務", "semester": "113/1", "name": "服務學習二", "code": "PS 1002", "credit": 0 },
+    { "category": "體育", "semester": "112/1", "name": "健康體適能", "code": "PE 1003", "credit": 1 },
+    { "category": "體育", "semester": "112/2", "name": "體適能(一)", "code": "PE 2003", "credit": 1 },
+    { "category": "體育", "semester": "113/1", "name": "室內五人制足球初級", "code": "PE 2142", "credit": 1 },
+    { "category": "體育", "semester": "113/2", "name": "現代舞", "code": "PE 2028", "credit": 1 }
+  ],
+
+  "系訂必修": [
+    { "category": "必修", "semester": "112/1", "name": "政治學一", "code": "PS 1005", "credit": 3 },
+    { "category": "必修", "semester": "112/2", "name": "政治學二", "code": "PS 1006", "credit": 3 },
+    { "category": "必修", "semester": "112/1", "name": "國際關係一", "code": "PS 1011", "credit": 2 },
+    { "category": "必修", "semester": "112/2", "name": "國際關係二", "code": "PS 1012", "credit": 2 },
+    { "category": "必修", "semester": "112/1", "name": "行政學一", "code": "PS 1021", "credit": 2 },
+    { "category": "必修", "semester": "112/2", "name": "行政學二", "code": "PS 1022", "credit": 2 },
+    { "category": "必修", "semester": "113/1", "name": "中華民國對外關係", "code": "PS 2203", "credit": 2 },
+    { "category": "必修", "semester": "112/1", "name": "中華民國憲法及政府一", "code": "PS 1031", "credit": 2 },
+    { "category": "必修", "semester": "112/2", "name": "中華民國憲法及政府二", "code": "PS 1032", "credit": 2 },
+    { "category": "必修", "semester": "113/1", "name": "比較政府一", "code": "PS 2001", "credit": 2 },
+    { "category": "必修", "semester": "113/2", "name": "比較政府二", "code": "PS 2002", "credit": 2 },
+    { "category": "必修", "semester": "113/1", "name": "經濟學乙一", "code": "PS 2021", "credit": 2 },
+    { "category": "必修", "semester": "113/2", "name": "經濟學乙二", "code": "PS 2022", "credit": 2 },
+    { "category": "必修", "semester": "113/1", "name": "社會統計", "code": "PS 4645", "credit": 4 },
+    { "category": "必修", "semester": "113/1", "name": "國際公法一", "code": "PS 3316", "credit": 2 },
+    { "category": "必修", "semester": "113/2", "name": "國際公法二", "code": "PS 3317", "credit": 2 },
+    { "category": "必修", "semester": "113/1", "name": "國際關係史一", "code": "PS 2201", "credit": 2 },
+    { "category": "必修", "semester": "113/2", "name": "國際關係史二", "code": "PS 2202", "credit": 2 },
+    { "category": "必修B", "semester": "112/1", "name": "日文一上", "code": "JpnL 2017", "credit": 3 },
+    { "category": "必修B", "semester": "112/2", "name": "日文一下", "code": "JpnL 2018", "credit": 3 }
+  ],
+
+  "通識": [
+    { "category": "通識A2", "semester": "112/1", "name": "海峽兩岸關係史一", "code": "Hist 1536", "credit": 2 },
+    { "category": "通識A2", "semester": "112/2", "name": "海峽兩岸關係史二", "code": "Hist 1537", "credit": 2 },
+    { "category": "通識A3*", "semester": "112/2", "name": "建築導論", "code": "CIE 3021", "credit": 3 },
+    { "category": "通識A35*", "semester": "113/2", "name": "文化人類學丙", "code": "Anth 2003", "credit": 3 },
+    { "category": "通識A58*", "semester": "113/2", "name": "普通心理學", "code": "Psy 1007", "credit": 3 }
+  ],
+
+  "基本能力": [
+    { "category": "基本能力", "semester": "113/2", "name": "英文寫作入門與演練", "code": "ECON 2028", "credit": 3 },
+    { "category": "基本能力", "semester": "113/1", "name": "主題英語不尬聊", "code": "ME 5072", "credit": 3 }
+  ],
+
+  "指定選修與一般選修": [
+    { "category": "指定選修", "semester": "113/2", "name": "國際安全", "code": "PS 4205", "credit": 2 },
+    { "category": "指定選修", "semester": "113/1", "name": "歐洲國際關係與安全合作", "code": "PS 4626", "credit": 2 },
+    { "category": "指定選修", "semester": "114/1", "name": "行政法一", "code": "PS 2301", "credit": 2 },
+    { "category": "指定選修", "semester": "114/1", "name": "國際新聞寫作實務", "code": "PS 5718", "credit": 2 },
+    { "category": "一般選修", "semester": "113/1", "name": "日文二上", "code": "JpnL 3047", "credit": 3 },
+    { "category": "一般選修", "semester": "113/2", "name": "日文二下", "code": "JpnL 3048", "credit": 3 },
+    { "category": "一般選修", "semester": "114/1", "name": "日文三上", "code": "JpnL 4029", "credit": 3 },
+    { "category": "一般選修", "semester": "114/1", "name": "英文作文二上", "code": "ECON 2029", "credit": 2 },
+    { "category": "一般選修", "semester": "114/1", "name": "刑法總則一", "code": "LAW 2053", "credit": 3 },
+    { "category": "一般選修", "semester": "112/1", "name": "新生講座-活出精彩", "code": "GenEdu 2009", "credit": 2 }
+  ],
+
+  "不計學分": [],
+
+  "輔系課程": [
+    { "category": "輔系", "semester": "114/1", "name": "人類學", "code": "Anth 1006", "credit": 3 }
+  ]
+}
