@@ -44,12 +44,24 @@ export const COLLEGE_PREFIXES = ["EE", "OE", "CommE", "EEE", "BEEI"];
 */
 function arrangeCourses(rawCourses) {
   removeFailedAndWithdrawnCourses(rawCourses);
-  console.log(rawCourses.系訂必修.map(c => c.name));
+  // console.log(rawCourses.系訂必修.map(c => c.name));
 
   let courses = { 共同必修: [], 通識: [], 系訂必修: [], 系選修: [], 院選修: [], 一般選修: [] }; 
   courses.共同必修 = rawCourses.共同必修課程;
   courses.系訂必修 = rawCourses.系訂必修;
   courses.通識 = rawCourses.通識;
+
+  // Add scopes and star to 通識
+  for (const course of courses.通識) {
+    const scopeMatches = course.grade.match(/A([1-8])/g);
+    if (scopeMatches) {
+      course.scopes = scopeMatches.map(s => parseInt(s.slice(1)));
+    } else {
+      course.scopes = [];
+    }
+    const starMatch = course.grade.match(/\*/);
+    course.star = starMatch ? true : false;
+  }
 
   // 國文 -> 通識
   if (courses.共同必修.filter(c => c.category === "國文").reduce((acc, c) => acc + c.credit, 0) > 3) {
@@ -232,6 +244,10 @@ function fulfillGeneralRequirements(generalCourses) {
     
   const graph = {};
   for (const course of generalCourses) {
+    if (!course.scopes) {
+      console.warn(`Course ${course.name} has no scopes defined.`);
+      continue;
+    }
     const eligible = course.scopes.filter(s => GEN_SCOPES.has(s));
     if (eligible.length > 0) {
       const key = course.name;
@@ -341,4 +357,4 @@ function removeFailedAndWithdrawnCourses(rawCourses) {
   }
 }
 
-export { arrangeCourses, computeRemainingCredits, addCourseRemarks, fulfillGeneralRequirements };
+// export { arrangeCourses, computeRemainingCredits, addCourseRemarks, fulfillGeneralRequirements };
