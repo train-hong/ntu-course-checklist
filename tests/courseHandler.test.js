@@ -1,16 +1,20 @@
 import { describe, it, expect } from 'vitest';
-import { arrangeCourses, fulfillGeneralRequirements, addCourseRemarks } from '../scripts/courseHandler.js';
+import { 
+  arrangeCourses, 
+  fulfillGeneralRequirements, 
+  addCourseRemarks,
+  COLLEGE_PREFIXES,
+  TOTAL_SEL_CREDITS,
+  DEPT_REQ_CREDITS,
+  DEPT_SEL_CREDITS,
+  COLLEGE_SEL_CREDITS,
+  GEN_SEL_CREDITS,
+  GEN_CREDITS,
+  GEN_SCOPE_NUM,
+  GEN_SCOPES
+} from '../scripts/courseHandler.js';
 import rawCourses from './extraction.json' assert { type: 'json' };
 import baoBaoRawCourses from './baobao_extraction.json' assert { type: 'json' };
-const COLLEGE_PREFIXES = ["EE", "OE", "CommE", "EEE", "BEEI"];
-const TOTAL_SEL_CREDITS = 53       // 選修總學分
-const DEPT_REQ_CREDITS = 51;  // 系訂必修學分
-const DEPT_SEL_CREDITS = 21; // 系選修學分
-const COLLEGE_SEL_CREDITS = 9;     // 院選修學分
-const SEL_CREDITS = 23;    // 一般選修學分
-const GEN_CREDITS = 15;                  // 通識學分
-const GEN_SCOPE_NUM = 3;
-const GEN_SCOPES = new Set([1, 2, 3, 5, 8]);
 
 describe('arrangeCourses', () => {
   // it('should move extra 國文 exceed 3 to 通識 with scopes [1,2,3,4]', () => {
@@ -61,7 +65,7 @@ describe('arrangeCourses', () => {
     expect(result.系訂必修.reduce((acc, c) => acc + c.credit, 0)).toBeGreaterThanOrEqual(DEPT_REQ_CREDITS);
     expect(result.系選修.reduce((acc, c) => acc + c.credit, 0)).toBeGreaterThanOrEqual(DEPT_SEL_CREDITS);
     expect(result.院選修.reduce((acc, c) => acc + c.credit, 0)).toBeGreaterThanOrEqual(COLLEGE_SEL_CREDITS);
-    expect(result.一般選修.reduce((acc, c) => acc + c.credit, 0)).toBeGreaterThanOrEqual(SEL_CREDITS);
+    expect(result.一般選修.reduce((acc, c) => acc + c.credit, 0)).toBeGreaterThanOrEqual(GEN_SEL_CREDITS);
   });
 });
 
