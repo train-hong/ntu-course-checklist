@@ -9,15 +9,15 @@
 
 // export {}; // make this file an ES module so top-level consts are module-scoped
 
-export const TOTAL_SEL_CREDITS = 53       // 選修總學分
-export const DEPT_REQ_CREDITS = 51;  // 系訂必修學分
-export const DEPT_SEL_CREDITS = 21; // 系選修學分
-export const COLLEGE_SEL_CREDITS = 9;     // 院選修學分
-export const GEN_SEL_CREDITS = 23;    // 一般選修學分
-export const GEN_CREDITS = 15;                  // 通識學分
-export const GEN_SCOPE_NUM = 3;
-export const GEN_SCOPES = new Set([1, 2, 3, 5, 8]);
-export const REQ_COURSES = new Set([
+const TOTAL_SEL_CREDITS = 53       // 選修總學分
+const DEPT_REQ_CREDITS = 51;  // 系訂必修學分
+const DEPT_SEL_CREDITS = 21; // 系選修學分
+const COLLEGE_SEL_CREDITS = 9;     // 院選修學分
+const GEN_SEL_CREDITS = 23;    // 一般選修學分
+const GEN_CREDITS = 15;                  // 通識學分
+const GEN_SCOPE_NUM = 3;
+const GEN_SCOPES = new Set([1, 2, 3, 5, 8]);
+const REQ_COURSES = new Set([
   "微積分1",
   "微積分2",
   "微積分3",
@@ -35,7 +35,7 @@ export const REQ_COURSES = new Set([
   "計算機結構",
   "計算機程式設計"
 ]);
-export const COLLEGE_PREFIXES = ["EE", "OE", "CommE", "EEE", "BEEI"];
+const COLLEGE_PREFIXES = ["EE", "OE", "CommE", "EEE", "BEEI"];
 
 /**
  * Arrange courses into categories that fit graduation requirements of NTU CSIE.
@@ -118,15 +118,12 @@ function arrangeCourses(rawCourses) {
   if (movedGenSciCredits > 0) {
     moveOverflowCredits(courses.系訂必修.filter(c => c.name.startsWith("普通")), courses.一般選修, 6);
   }
-  // console.log(courses.系選修);
   
   // 系選修 -> 院選修（溢出）
   moveOverflowCredits(courses.系選修.reduce((acc, c) => acc + c.credit, 0) - DEPT_SEL_CREDITS, courses.系選修, courses.院選修, DEPT_SEL_CREDITS);
-  // console.log(courses.院選修);
   
   // 院選修 -> 一般選修（溢出）
   moveOverflowCredits(courses.院選修.reduce((acc, c) => acc + c.credit, 0) - COLLEGE_SEL_CREDITS, courses.院選修, courses.一般選修, COLLEGE_SEL_CREDITS);
-  // console.log(courses.一般選修);
 
   // 通識 -> 一般選修
   moveOverflowGenCredits(courses);
@@ -149,11 +146,11 @@ function computeRemainingCredits(arrangedCourses) {
                       category === "系訂必修" ? DEPT_REQ_CREDITS :
                       category === "系選修" ? DEPT_SEL_CREDITS :
                       category === "院選修" ? COLLEGE_SEL_CREDITS :
-                      category === "一般選修" ? TOTAL_SEL_CREDITS : 0;
+                      category === "一般選修" ? GEN_SEL_CREDITS : 0;
     credits[category] = {
       requiredCredit,
-      TakenCredit: takenCredits,
-      RemainingCredit: Math.max(0, requiredCredit - takenCredits),
+      takenCredit: takenCredits,
+      remainingCredit: Math.max(0, requiredCredit - takenCredits),
     };
   }
 
@@ -185,7 +182,8 @@ function addCourseRemarks(credits, courses, generalNeededScope) {
   /** @type {Remarks} */
   let remarks = {
     系訂必修: "",
-    通識: ""
+    通識: "",
+    共同必修: ""
   };
 
   // 系訂必修
@@ -231,6 +229,15 @@ function addCourseRemarks(credits, courses, generalNeededScope) {
     remarks.通識 = remarks.通識.slice(0, -1);
     remarks.通識 += "，以上領域需各至少修習一門";
   }
+
+  // 共同必修, 三學分國文
+  for (const commonCourse of courses.共同必修) {
+    if (commonCourse.category === "國文") {
+      remarks.共同必修 = "國文領域尚缺 3 學分"
+      break;
+    } 
+  }
+
   return remarks;
 }
   

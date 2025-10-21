@@ -73,34 +73,45 @@ function createTableContainer(title, courses, credits, remarks) {
   const tbody = table.querySelector("tbody");
 
   for (const course of courses) {
+    // console.log(`Displaying course: {name: ${course ? course.name : ""}, credits: ${course ? course.credits : ""}, semester: ${course ? course.semester : ""}}`);
     const row = document.createElement("tr");
     row.innerHTML = `
       <td style="text-align:left;">${course ? course.name : ""}</td>
-      <td style="text-align:center;">${course ? course.credits : ""}</td>
+      <td style="text-align:center;">${course ? course.credit : ""}</td>
       <td style="text-align:center;">${course ? course.semester : ""}</td>
     `;
     tbody.appendChild(row);
   }
   container.appendChild(table);
 
-  if (credits.title) {
+  if (credits[title]) {
     const creditsDiv = document.createElement("div");
     creditsDiv.style.marginTop = "8px";
     creditsDiv.innerHTML = `
-      應修學分：${credits.title.requiredCredit}，
-      已修學分：<span style="color:black;">${credits.title.takenCredit}</span>，
-      剩餘學分：<span style="color:red;">${credits.title.remainingCredit}</span>
-    `;
+      應修學分：${credits[title].requiredCredit}，
+      已修學分：<span style="color:black;">${credits[title].takenCredit}</span>，
+      剩餘學分：<span style="color:red;">${credits[title].remainingCredit}</span>
+    `; // 已修 剩餘undefined
     container.appendChild(creditsDiv);
   }
 
-  // TODO: Add general and required remarks display
-  if (remarks.title) {
+  // 系訂必修
+  if (title == "系訂必修" && remarks.系訂必修) {
     const remarksDiv = document.createElement("div");
     remarksDiv.style.marginTop = "8px";
-    remarksDiv.innerHTML = `
-      備註：${remarks.title ? remarks.title : ""}
-    `;
+    remarksDiv.innerHTML = `備註：${remarks.系訂必修}`;
+    container.appendChild(remarksDiv);
+  }
+  if (title == "通識" && remarks.通識) {
+    const remarksDiv = document.createElement("div");
+    remarksDiv.style.marginTop = "8px";
+    remarksDiv.innerHTML = `備註：${remarks.通識}`;
+    container.appendChild(remarksDiv);
+  }
+  if (title == "共同必修" && remarks.共同必修) {
+    const remarksDiv = document.createElement("div");
+    remarksDiv.style.marginTop = "8px";
+    remarksDiv.innerHTML = `備註：${remarks.共同必修}`;
     container.appendChild(remarksDiv);
   }
 

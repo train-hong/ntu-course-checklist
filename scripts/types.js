@@ -42,7 +42,6 @@
  * @property {Credit} 系選修
  * @property {Credit} 院選修
  * @property {Credit} 一般選修
- * @property {Credit} 體育
  */
 
 /**
@@ -68,4 +67,5 @@
  * @typedef {Object} Remarks
  * @property {string} 系訂必修
  * @property {string} 通識
+ * @property {string} 共同必修
  */
