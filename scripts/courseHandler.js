@@ -7,7 +7,7 @@
  * @typedef {import('./types.js').Remarks} Remarks
  */
 
-export {}; // make this file an ES module so top-level consts are module-scoped
+// export {}; // make this file an ES module so top-level consts are module-scoped
 
 const TOTAL_SEL_CREDITS = 53       // 選修總學分
 const DEPT_REQ_CREDITS = 51;  // 系訂必修學分
@@ -129,7 +129,7 @@ function arrangeCourses(rawCourses) {
 function computeRemainingCredits(arrangedCourses) {
   // return courses, number of credits to take
   let credits = {};
-  let generalResults = fulfillGeneral(arrangedCourses.通識);
+  let generalResults = fulfillGeneralRequirements(arrangedCourses.通識);
   
   for (const [category, courseList] of Object.entries(arrangedCourses)) {
     let takenCredits = courseList.reduce((acc, course) => acc + course.credit, 0);
@@ -341,4 +341,4 @@ function removeFailedAndWithdrawnCourses(rawCourses) {
   }
 }
 
-export { arrangeCourses, computeRemainingCredits, addCourseRemarks, fulfillGeneralRequirements };
+// export { arrangeCourses, computeRemainingCredits, addCourseRemarks, fulfillGeneralRequirements };

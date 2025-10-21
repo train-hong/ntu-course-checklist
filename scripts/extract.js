@@ -1,32 +1,47 @@
-import fs from 'fs';
-import cheerio from 'cheerio';
+function extract() {
+  const rawCourses = { 共同必修課程: [], 系訂必修: [], 通識: [], 指定選修與一般選修: [], 不計學分: [], 輔系課程: [], 雙主修課程: [] };
+  const categories = [ "共同必修課程", "系訂必修", "通識", "指定選修與一般選修", "不計學分", "輔系課程", "雙主修課程" ];
 
-const html = fs.readFileSync('./data/修課檢視表.html', 'utf-8');
-const $ = cheerio.load(html);
+  for (const category of categories) {
+    const allH4s = document.querySelectorAll('h4');
+    let table = null;
 
-const rawCourses = { 共同必修課程: [], 系訂必修: [], 通識: [], 指定選修與一般選修: [], 不計學分: [], 輔系課程: [], 雙主修課程: [] };
-const categories = [ "共同必修", "系訂必修", "通識", "基本能力", "指定選修與一般選修", "不計學分", "輔系課程", "雙主修課程" ];
+    for (const h4 of allH4s) {
+      if (h4.textContent.trim().includes(category)) {
+        const nextElem = h4.nextElementSibling;
+        if (nextElem && nextElem.classList.contains('table-responsive')) {
+          table = nextElem;
+        }
+        break;
+      }
+    }
 
-for (const category of categories) {
-  const table = $(`h4:contains("${category}")`).next('table-responsive');
-  const rows = table.find('tbody tr');
-  const courses = [];
+    if (!table) {
+      console.warn(`Table for category "${category}" not found.`);
+      continue;
+    }
 
-  rows.each((_, tr) => {
-    const cells = $(tr).find('td').map((_, td) => $(td).text().trim()).get();
+    const rows = table.querySelectorAll('tbody tr');
+    const courses = [];
 
-    courses.push({
-      category: cells[0],
-      semester: cells[1],
-      name: cells[2],
-      code: cells[3],
-      credit: parseFloat(cells[6]),
-      grade: cells[7]
-    });
-  });
+    for (const tr of rows) {
+      const tdElements = tr.querySelectorAll('td');
+      const cells = Array.from(tdElements).map(td => td.textContent.trim());
 
-  rawCourses[category] = courses;
+      if (cells.length > 0) {
+        courses.push({
+          category: cells[0],semester: cells[1],
+          name: cells[2],
+          code: cells[3],
+          credit: parseFloat(cells[6]),
+          grade: cells[7]
+        });
+      }
+    }
+
+    rawCourses[category] = courses;
+  }
+
+  console.log("Extracted courses:", rawCourses);
+  return rawCourses;
 }
-
-fs.writeFileSync('extraction.json', JSON.stringify(rawCourses, null, 2));
-console.log('Courses extracted and saved to extraction.json');

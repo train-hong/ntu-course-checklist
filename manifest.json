@@ -10,7 +10,11 @@
     "content_scripts": [
         {
             "matches": ["https://reg.aca.ntu.edu.tw/*"],
-            "js": ["scripts/content.js"],
+            "js": [
+                "scripts/extract.js",
+                "scripts/courseHandler.js",
+                "scripts/display.js",
+                "scripts/content.js"],
             "css": ["styles/content.css"]
         }
     ], 
