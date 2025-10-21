@@ -118,4 +118,4 @@ function createTableContainer(title, courses, credits, remarks) {
   return container;
 }
 
-// export { display };
+export { display };

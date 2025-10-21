@@ -10,11 +10,7 @@
     "content_scripts": [
         {
             "matches": ["https://reg.aca.ntu.edu.tw/*"],
-            "js": [
-                "scripts/extract.js",
-                "scripts/courseHandler.js",
-                "scripts/display.js",
-                "scripts/content.js"],
+            "js": ["scripts/content.js"],
             "css": ["styles/content.css"]
         }
     ], 
@@ -26,5 +22,11 @@
                 "mac": "Command+B"
             }
         }
-    }
+    },
+    "web_accessible_resources": [
+        {
+            "resources": ["scripts/*.js"],
+            "matches": ["https://reg.aca.ntu.edu.tw/*"]
+        }
+    ]
 }

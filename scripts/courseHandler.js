@@ -366,4 +366,4 @@ function removeFailedAndWithdrawnCourses(rawCourses) {
   }
 }
 
-// export { arrangeCourses, computeRemainingCredits, addCourseRemarks, fulfillGeneralRequirements };
+export { arrangeCourses, computeRemainingCredits, addCourseRemarks, fulfillGeneralRequirements };
