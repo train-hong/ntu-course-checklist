@@ -191,17 +191,16 @@ function addCourseRemarks(credits, courses, generalNeededScope) {
   }
 
   if (reqCourseSet.size != 0) {
-    for (missingCourse of reqCourseSet) {
+    for (const missingCourse of reqCourseSet) {
       remarks.系訂必修 += missingCourse + "、";
     }
 
     remarks.系訂必修 = remarks.系訂必修.slice(0, -1);  // remove the redundant 、
-    remarks.系訂必修[-1] = "\n";
   }
 
   if (!haveExperiment) {
     if (reqCourseSet.size != 0) {
-    remarks.系訂必修 += "、計算機網路實驗/計算機系統實驗（擇一修習）";
+      remarks.系訂必修 += "、計算機網路實驗/計算機系統實驗（擇一修習）";
     }
     else {
       remarks.系訂必修 += "計算機網路實驗/計算機系統實驗（擇一修習）";
@@ -212,12 +211,13 @@ function addCourseRemarks(credits, courses, generalNeededScope) {
   if (generalNeededScope.length !== 0) {
     remarks.通識 = "通識領域尚未修習：";
 
-    for (scope of generalNeededScope) {
+    for (const scope of generalNeededScope) {
       remarks.通識 += "A" + scope + "、";
     }
     remarks.通識 = remarks.通識.slice(0, -1);
     remarks.通識 += "，以上領域需各至少修習一門";
   }
+  return remarks;
 }
   
 /** 
@@ -341,4 +341,4 @@ function removeFailedAndWithdrawnCourses(rawCourses) {
   }
 }
 
-// export { arrangeCourses, computeRemainingCredits, addCourseRemarks, fulfillGeneralRequirements };
+export { arrangeCourses, computeRemainingCredits, addCourseRemarks, fulfillGeneralRequirements };

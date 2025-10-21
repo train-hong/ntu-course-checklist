@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { arrangeCourses, fulfillGeneralRequirements } from '../scripts/courseHandler.js';
+import { arrangeCourses, fulfillGeneralRequirements, addCourseRemarks } from '../scripts/courseHandler.js';
 import rawCourses from './extraction.json' assert { type: 'json' };
 import baoBaoRawCourses from './baobao_extraction.json' assert { type: 'json' };
 const COLLEGE_PREFIXES = ["EE", "OE", "CommE", "EEE", "BEEI"];
@@ -82,6 +82,68 @@ describe('arrangeCourses', () => {
 //   });
 // });
 
-// describe('addCourseRemarks', () => {
-  
-// })
+describe('addCourseRemarks', () => {
+    it('should return empty remarks when all requirements are fulfilled', () => {
+      const courses = {
+        系訂必修: [
+          { name: '微積分1' }, { name: '微積分2' }, { name: '微積分3' }, { name: '微積分4' },
+          { name: '資料結構與演算法' }, { name: '線性代數' }, { name: '機率' },
+          { name: '演算法設計與分析' }, { name: '系統程式設計' }, { name: '人工智慧導論' },
+          { name: '作業系統' }, { name: '專題研究' }, { name: '計算機網路' },
+          { name: '自動機與形式語言' }, { name: '計算機結構' }, { name: '計算機程式設計' },
+          { name: '計算機網路實驗' }
+        ],
+        通識: []
+      };
+      const remarks = addCourseRemarks({}, courses, []);
+      expect(remarks.系訂必修).toBe('');
+      expect(remarks.通識).toBe('');
+    });
+
+    it('should generate remarks for missing required courses, including the experiment', () => {
+      const courses = {
+        系訂必修: [
+          { name: '微積分1' },
+        ],
+        通識: []
+      };
+      const remarks = addCourseRemarks({}, courses, []);
+      expect(remarks.系訂必修).toContain('微積分2');
+      expect(remarks.系訂必修).toContain('資料結構與演算法');
+      expect(remarks.系訂必修).toContain('計算機網路實驗/計算機系統實驗');
+    });
+
+    it('should generate remarks for missing experiment course only', () => {
+        const courses = {
+          系訂必修: [
+            { name: '微積分1' }, { name: '微積分2' }, { name: '微積分3' }, { name: '微積分4' },
+            { name: '資料結構與演算法' }, { name: '線性代數' }, { name: '機率' },
+            { name: '演算法設計與分析' }, { name: '系統程式設計' }, { name: '人工智慧導論' },
+            { name: '作業系統' }, { name: '專題研究' }, { name: '計算機網路' },
+            { name: '自動機與形式語言' }, { name: '計算機結構' }, { name: '計算機程式設計' },
+          ],
+          通識: []
+        };
+        const remarks = addCourseRemarks({}, courses, []);
+        expect(remarks.系訂必修).toBe('系訂必修尚未修習：計算機網路實驗/計算機系統實驗（擇一修習）');
+      });
+
+    it('should generate remarks for missing general education scopes', () => {
+      const courses = {
+        系訂必修: [],
+        通識: []
+      };
+      const remarks = addCourseRemarks({}, courses, [1, 5, 8]);
+      expect(remarks.通識).toBe('通識領域尚未修習：A1、A5、A8，以上領域需各至少修習一門');
+    });
+
+    it('should handle empty courses object', () => {
+        const courses = {
+            系訂必修: [],
+            通識: []
+        };
+        const remarks = addCourseRemarks({}, courses, []);
+        expect(remarks.系訂必修).not.toBe('');
+        expect(remarks.通識).toBe('');
+    });
+  });
