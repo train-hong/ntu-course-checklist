@@ -145,14 +145,15 @@ function computeRemainingCredits(arrangedCourses) {
   
   for (const [category, courseList] of Object.entries(arrangedCourses)) {
     let takenCredits = courseList.reduce((acc, course) => acc + course.credit, 0);
-    credits[category] = {
-      ReqCredit: category === "通識" ? GEN_CREDITS :
+    const requiredCredit = category === "通識" ? GEN_CREDITS :
                       category === "系訂必修" ? DEPT_REQ_CREDITS :
                       category === "系選修" ? DEPT_SEL_CREDITS :
                       category === "院選修" ? COLLEGE_SEL_CREDITS :
-                      category === "一般選修" ? TOTAL_SEL_CREDITS : 0,
+                      category === "一般選修" ? TOTAL_SEL_CREDITS : 0;
+    credits[category] = {
+      requiredCredit,
       TakenCredit: takenCredits,
-      RemainingCredit: Math.max(0, courseList[0].credit - takenCredits),
+      RemainingCredit: Math.max(0, requiredCredit - takenCredits),
     };
   }
 
@@ -161,8 +162,9 @@ function computeRemainingCredits(arrangedCourses) {
     NeedScope: generalResults.needScope
   };
 
+  const takenReqCourseNames = new Set(arrangedCourses.系訂必修.map(c => c.name));
   let reqRemarks = {
-    MissingReq: arrangedCourses.系訂必修.filter(c => REQ_COURSES.has(c.name)).map(c => c.name),
+    MissingReq: [...REQ_COURSES].filter(c => !takenReqCourseNames.has(c)),
     // need fix: MissingCommonReq: arrangedCourses.共同必修.filter(c => REQ_COURSES.has(c.name)).map(c => c.name)
   };
 

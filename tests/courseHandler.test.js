@@ -3,6 +3,8 @@ import {
   arrangeCourses, 
   fulfillGeneralRequirements, 
   addCourseRemarks,
+  computeRemainingCredits,
+  REQ_COURSES,
   COLLEGE_PREFIXES,
   TOTAL_SEL_CREDITS,
   DEPT_REQ_CREDITS,
@@ -151,3 +153,42 @@ describe('addCourseRemarks', () => {
         expect(remarks.通識).toBe('');
     });
   });
+
+describe('computeRemainingCredits', () => {
+  it('should correctly compute remaining credits when some requirements are missing', () => {
+    const arrangedCourses = {
+      共同必修: [],
+      通識: [
+        { name: 'Gen Ed 1', credit: 2, scopes: [1], star: false },
+        { name: 'Gen Ed 2', credit: 2, scopes: [2], star: false },
+      ],
+      系訂必修: [
+        { name: '微積分1', credit: 2 },
+      ],
+      系選修: [{ credit: 3 }],
+      院選修: [{ credit: 3 }],
+      一般選修: [{ credit: 3 }],
+    };
+
+    const credits = computeRemainingCredits(arrangedCourses);
+
+    expect(credits.通識.TakenCredit).toBe(4);
+    expect(credits.通識.RemainingCredit).toBe(GEN_CREDITS - 4);
+    expect(credits.通識.Fulfill).toBe(false);
+    expect(credits.通識.NeedScope).toEqual(expect.arrayContaining([3, 5, 8]));
+
+    expect(credits.系訂必修.TakenCredit).toBe(2);
+    expect(credits.系訂必修.RemainingCredit).toBe(DEPT_REQ_CREDITS - 2);
+    expect(credits.系訂必修.MissingReq).not.toContain('微積分1');
+    expect(credits.系訂必修.MissingReq).toContain('資料結構與演算法');
+
+    expect(credits.系選修.TakenCredit).toBe(3);
+    expect(credits.系選修.RemainingCredit).toBe(DEPT_SEL_CREDITS - 3);
+
+    expect(credits.院選修.TakenCredit).toBe(3);
+    expect(credits.院選修.RemainingCredit).toBe(COLLEGE_SEL_CREDITS - 3);
+
+    expect(credits.一般選修.TakenCredit).toBe(3);
+    expect(credits.一般選修.RemainingCredit).toBe(TOTAL_SEL_CREDITS - 3);
+  });
+});
