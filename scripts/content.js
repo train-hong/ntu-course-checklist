@@ -9,7 +9,7 @@
 
     // 2. Import functions from your modules
     const { extract } = await import(extractURL);
-    const { arrangeCourses, computeRemainingCredits, addCourseRemarks } = await import(handlerURL);
+    const { arrangeCourses, computeRemainingCredits, addCourseRemarks, fulfillGeneralRequirements } = await import(handlerURL);
     const { display } = await import(displayURL);
 
     // 3. Define and run your main logic

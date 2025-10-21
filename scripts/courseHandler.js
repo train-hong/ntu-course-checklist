@@ -53,13 +53,15 @@ function arrangeCourses(rawCourses) {
 
   // Add scopes and star to 通識
   for (const course of courses.通識) {
-    const scopeMatches = course.grade.match(/A([1-8])/g);
+    const scopeMatches = course.category.match(/([1-8])/g);
+    // console.log(`Course ${course.name} scopeMatches:`, scopeMatches);
     if (scopeMatches) {
-      course.scopes = scopeMatches.map(s => parseInt(s.slice(1)));
+      course.scopes = scopeMatches.map(s => parseInt(s));
+      // console.log(`Course ${course.name} scopes:`, course.scopes);
     } else {
       course.scopes = [];
     }
-    const starMatch = course.grade.match(/\*/);
+    const starMatch = course.category.match(/\*/);
     course.star = starMatch ? true : false;
   }
 
@@ -126,7 +128,9 @@ function arrangeCourses(rawCourses) {
   moveOverflowCredits(courses.院選修.reduce((acc, c) => acc + c.credit, 0) - COLLEGE_SEL_CREDITS, courses.院選修, courses.一般選修, COLLEGE_SEL_CREDITS);
 
   // 通識 -> 一般選修
+  console.log("Before moving overflow gen credits:", courses.通識);
   moveOverflowGenCredits(courses);
+  console.log("After moving overflow gen credits:", courses.通識);
 
   return courses;
 }

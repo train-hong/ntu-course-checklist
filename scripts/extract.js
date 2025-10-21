@@ -41,9 +41,6 @@ function extract() {
           grade: cells[7]
         });
       }
-      if (category === "通識") {
-        ("Extracted 通識 course:", courses);
-      }
     }
 
     rawCourses[category] = courses;
