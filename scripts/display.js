@@ -59,27 +59,50 @@ function createTableContainer(title, courses, credits, remarks) {
 
   const table = document.createElement("table");
   table.classList.add("table");
-  table.innerHTML = `
-    <thead>
-      <tr>
-        <th style="text-align: center; vertical-align: center; color: white; background-color:Highlight;">科目名稱</th>
-        <th style="text-align: center; vertical-align: center; color: white; background-color:Highlight;">學分</th>
-        <th style="text-align: center; vertical-align: center; color: white; background-color:Highlight;">學年期</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  `;
+  if (title === "通識" || title === "一般選修") {
+    table.innerHTML = `
+      <thead>
+        <tr>
+          <th style="text-align: center; color: white; background-color:Highlight;">通識領域/星號</th>
+          <th style="text-align: center; color: white; background-color:Highlight;">科目名稱</th>
+          <th style="text-align: center; color: white; background-color:Highlight;">學分</th>
+          <th style="text-align: center; color: white; background-color:Highlight;">學年期</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    `;
+  } else {
+    table.innerHTML = `
+      <thead>
+        <tr>
+          <th style="text-align: center; color: white; background-color:Highlight;">科目名稱</th>
+          <th style="text-align: center; color: white; background-color:Highlight;">學分</th>
+          <th style="text-align: center; color: white; background-color:Highlight;">學年期</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    `;
+  }
 
   const tbody = table.querySelector("tbody");
 
   for (const course of courses) {
-    // console.log(`Displaying course: {name: ${course ? course.name : ""}, credits: ${course ? course.credits : ""}, semester: ${course ? course.semester : ""}}`);
     const row = document.createElement("tr");
-    row.innerHTML = `
-      <td style="text-align:left;">${course ? course.name : ""}</td>
+    if (title === "通識" || title === "一般選修") {
+
+      row.innerHTML = `
+        <td style="text-align:left; padding-left: 12px;">${course.category.startsWith("通識") ? course.category.slice(2) : ""}</td>
+        <td style="text-align:left; padding-left: 12px;">${course.name}</td>
+        <td style="text-align:center;">${course.credit}</td>
+        <td style="text-align:center;">${course.semester}</td>
+      `;
+    } else {
+      row.innerHTML = `
+      <td style="text-align:left; padding-left: 12px;">${course ? course.name : ""}</td>
       <td style="text-align:center;">${course ? course.credit : ""}</td>
       <td style="text-align:center;">${course ? course.semester : ""}</td>
-    `;
+      `;
+    }
     tbody.appendChild(row);
   }
   container.appendChild(table);
@@ -88,9 +111,7 @@ function createTableContainer(title, courses, credits, remarks) {
     const creditsDiv = document.createElement("div");
     creditsDiv.style.marginTop = "8px";
     creditsDiv.innerHTML = `
-      應修學分：${credits[title].requiredCredit}，
-      已修學分：<span style="color:black;">${credits[title].takenCredit}</span>，
-      剩餘學分：<span style="color:red;">${credits[title].remainingCredit}</span>
+      應修學分：${credits[title].requiredCredit}，已修學分：<span style="color:black;">${credits[title].takenCredit}</span>，剩餘學分：<span style="color:red;">${credits[title].remainingCredit}</span>
     `; // 已修 剩餘undefined
     container.appendChild(creditsDiv);
   }

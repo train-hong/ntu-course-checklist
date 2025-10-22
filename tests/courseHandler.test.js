@@ -51,18 +51,6 @@ describe('arrangeCourses', () => {
     
     const result = arrangeCourses(rawCourses);
 
-    console.log(`credits of 通識: ${result.通識.reduce((acc, c) => acc + c.credit, 0)}`);
-    console.log(`通識: ${result.通識.map(c => c.name).join(", ")}`);
-    console.log(`credits of 系訂必修: ${result.系訂必修.reduce((acc, c) => acc + c.credit, 0)}`);
-    console.log(`系訂必修: ${result.系訂必修.map(c => c.name).join(", ")}`);
-    console.log(`credits of 系選修: ${result.系選修.reduce((acc, c) => acc + c.credit, 0)}`);
-    console.log(`系選修: ${result.系選修.map(c => c.name).join(", ")}`);
-    console.log(`系選修: ${result.系選修.map(c => c.credit).join(", ")}`);
-    console.log(`credits of 院選修: ${result.院選修.reduce((acc, c) => acc + c.credit, 0)}`);
-    console.log(`院選修: ${result.院選修.map(c => c.name).join(", ")}`);
-    console.log(`credits of 一般選修: ${result.一般選修.reduce((acc, c) => acc + c.credit, 0)}`);
-    console.log(`一般選修: ${result.一般選修.map(c => c.name).join(", ")}`);
-    console.log(`一般選修: ${result.一般選修.map(c => c.credit).join(", ")}`);
     expect(result.通識.reduce((acc, c) => acc + c.credit, 0)).toBeGreaterThanOrEqual(GEN_CREDITS);
     expect(result.系訂必修.reduce((acc, c) => acc + c.credit, 0)).toBeGreaterThanOrEqual(DEPT_REQ_CREDITS);
     expect(result.系選修.reduce((acc, c) => acc + c.credit, 0)).toBeGreaterThanOrEqual(DEPT_SEL_CREDITS);
@@ -172,23 +160,23 @@ describe('computeRemainingCredits', () => {
 
     const credits = computeRemainingCredits(arrangedCourses);
 
-    expect(credits.通識.TakenCredit).toBe(4);
-    expect(credits.通識.RemainingCredit).toBe(GEN_CREDITS - 4);
-    expect(credits.通識.Fulfill).toBe(false);
-    expect(credits.通識.NeedScope).toEqual(expect.arrayContaining([3, 5, 8]));
+    expect(credits.通識.takenCredit).toBe(4);
+    expect(credits.通識.remainingCredit).toBe(GEN_CREDITS - 4);
+    expect(credits.通識.fulfill).toBe(false);
+    expect(credits.通識.needScope).toEqual(expect.arrayContaining([3, 5, 8]));
 
-    expect(credits.系訂必修.TakenCredit).toBe(2);
-    expect(credits.系訂必修.RemainingCredit).toBe(DEPT_REQ_CREDITS - 2);
-    expect(credits.系訂必修.MissingReq).not.toContain('微積分1');
-    expect(credits.系訂必修.MissingReq).toContain('資料結構與演算法');
+    expect(credits.系訂必修.takenCredit).toBe(2);
+    expect(credits.系訂必修.remainingCredit).toBe(DEPT_REQ_CREDITS - 2);
+    expect(credits.系訂必修.missingReq).not.toContain('微積分1');
+    expect(credits.系訂必修.missingReq).toContain('資料結構與演算法');
 
-    expect(credits.系選修.TakenCredit).toBe(3);
-    expect(credits.系選修.RemainingCredit).toBe(DEPT_SEL_CREDITS - 3);
+    expect(credits.系選修.takenCredit).toBe(3);
+    expect(credits.系選修.remainingCredit).toBe(DEPT_SEL_CREDITS - 3);
 
-    expect(credits.院選修.TakenCredit).toBe(3);
-    expect(credits.院選修.RemainingCredit).toBe(COLLEGE_SEL_CREDITS - 3);
+    expect(credits.院選修.takenCredit).toBe(3);
+    expect(credits.院選修.remainingCredit).toBe(COLLEGE_SEL_CREDITS - 3);
 
-    expect(credits.一般選修.TakenCredit).toBe(3);
-    expect(credits.一般選修.RemainingCredit).toBe(TOTAL_SEL_CREDITS - 3);
+    expect(credits.一般選修.takenCredit).toBe(3);
+    expect(credits.一般選修.remainingCredit).toBe(GEN_SEL_CREDITS - 3);
   });
 });

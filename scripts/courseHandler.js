@@ -9,15 +9,15 @@
 
 // export {}; // make this file an ES module so top-level consts are module-scoped
 
-const TOTAL_SEL_CREDITS = 53       // 選修總學分
-const DEPT_REQ_CREDITS = 51;  // 系訂必修學分
-const DEPT_SEL_CREDITS = 21; // 系選修學分
-const COLLEGE_SEL_CREDITS = 9;     // 院選修學分
-const GEN_SEL_CREDITS = 23;    // 一般選修學分
-const GEN_CREDITS = 15;                  // 通識學分
-const GEN_SCOPE_NUM = 3;
-const GEN_SCOPES = new Set([1, 2, 3, 5, 8]);
-const REQ_COURSES = new Set([
+export const TOTAL_SEL_CREDITS = 53       // 選修總學分
+export const DEPT_REQ_CREDITS = 51;  // 系訂必修學分
+export const DEPT_SEL_CREDITS = 21; // 系選修學分
+export const COLLEGE_SEL_CREDITS = 9;     // 院選修學分
+export const GEN_SEL_CREDITS = 23;    // 一般選修學分
+export const GEN_CREDITS = 15;                  // 通識學分
+export const GEN_SCOPE_NUM = 3;
+export const GEN_SCOPES = new Set([1, 2, 3, 5, 8]);
+export const REQ_COURSES = new Set([
   "微積分1",
   "微積分2",
   "微積分3",
@@ -35,7 +35,7 @@ const REQ_COURSES = new Set([
   "計算機結構",
   "計算機程式設計"
 ]);
-const COLLEGE_PREFIXES = ["EE", "OE", "CommE", "EEE", "BEEI"];
+export const COLLEGE_PREFIXES = ["EE", "OE", "CommE", "EEE", "BEEI"];
 
 /**
  * Arrange courses into categories that fit graduation requirements of NTU CSIE.
@@ -128,9 +128,7 @@ function arrangeCourses(rawCourses) {
   moveOverflowCredits(courses.院選修.reduce((acc, c) => acc + c.credit, 0) - COLLEGE_SEL_CREDITS, courses.院選修, courses.一般選修, COLLEGE_SEL_CREDITS);
 
   // 通識 -> 一般選修
-  console.log("Before moving overflow gen credits:", courses.通識);
   moveOverflowGenCredits(courses);
-  console.log("After moving overflow gen credits:", courses.通識);
 
   return courses;
 }
@@ -228,7 +226,7 @@ function addCourseRemarks(credits, courses, generalNeededScope) {
     remarks.通識 = "通識領域尚未修習：";
 
     for (const scope of generalNeededScope) {
-      remarks.通識 += "A" + scope + "、";
+      remarks.通識 += "A" + scope +   "、";
     }
     remarks.通識 = remarks.通識.slice(0, -1);
     remarks.通識 += "，以上領域需各至少修習一門";
