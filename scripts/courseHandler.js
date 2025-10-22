@@ -135,7 +135,7 @@ function arrangeCourses(rawCourses) {
     if (course.grade === "通過") {
       course.category = "服務";
       const idx = courses.系訂必修.indexOf(course);
-      courses.共同必修.push(courses.系訂必修.splice(idx)[0]);
+      courses.共同必修.push(courses.系訂必修.splice(idx, 1)[0]);
     }
   }
 
@@ -193,8 +193,7 @@ function addCourseRemarks(credits, courses, generalNeededScope) {
   /** @type {Remarks} */
   let remarks = {
     系訂必修: "",
-    通識: "",
-    共同必修: ""
+    通識: ""
   };
 
   // 系訂必修
@@ -240,17 +239,6 @@ function addCourseRemarks(credits, courses, generalNeededScope) {
     }
     remarks.通識 = remarks.通識.slice(0, -1);
     remarks.通識 += "，以上領域需各至少修習一門";
-  }
-
-  // 共同必修, 三學分國文
-  for (const commonCourse of courses.共同必修) {
-    if (commonCourse.category === "國文") {
-      haveChinese = true;
-      break;
-    } 
-  }
-  if (!haveChinese) {
-    remarks.共同必修 = "國文領域尚缺 3 學分";
   }
 
   return remarks;

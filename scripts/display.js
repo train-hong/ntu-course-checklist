@@ -140,22 +140,15 @@ function createTableContainer(title, courses, credits, remarks) {
   }
 
   // 系訂必修
-  if (title == "系訂必修" && remarks.系訂必修) {
+  if (title === "系訂必修" && remarks.系訂必修) {
     const remarksDiv = document.createElement("div");
     remarksDiv.style.marginTop = "8px";
     remarksDiv.innerHTML = `備註：${remarks.系訂必修}`;
     container.appendChild(remarksDiv);
-  }
-  if (title == "通識" && remarks.通識) {
+  } else if (title === "通識" && remarks.通識) {
     const remarksDiv = document.createElement("div");
     remarksDiv.style.marginTop = "8px";
     remarksDiv.innerHTML = `備註：${remarks.通識}`;
-    container.appendChild(remarksDiv);
-  }
-  if (title == "共同必修" && remarks.共同必修) {
-    const remarksDiv = document.createElement("div");
-    remarksDiv.style.marginTop = "8px";
-    remarksDiv.innerHTML = `備註：${remarks.共同必修}`;
     container.appendChild(remarksDiv);
   }
 

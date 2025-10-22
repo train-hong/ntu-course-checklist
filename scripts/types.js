@@ -67,5 +67,4 @@
  * @typedef {Object} Remarks
  * @property {string} 系訂必修
  * @property {string} 通識
- * @property {string} 共同必修
  */

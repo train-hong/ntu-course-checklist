@@ -12,9 +12,7 @@
     const { arrangeCourses, computeRemainingCredits, addCourseRemarks, fulfillGeneralRequirements } = await import(handlerURL);
     const { display } = await import(displayURL);
 
-    // 3. Define and run your main logic
     function main() {
-      // Your content script logic here
       const rawCourses = extract();
       const arrangedCourses = arrangeCourses(rawCourses);
       const remainingCredits = computeRemainingCredits(arrangedCourses);
