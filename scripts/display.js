@@ -110,9 +110,32 @@ function createTableContainer(title, courses, credits, remarks) {
   if (credits[title]) {
     const creditsDiv = document.createElement("div");
     creditsDiv.style.marginTop = "8px";
-    creditsDiv.innerHTML = `
-      應修學分：${credits[title].requiredCredit}，已修學分：<span style="color:black;">${credits[title].takenCredit}</span>，剩餘學分：<span style="color:red;">${credits[title].remainingCredit}</span>
-    `; // 已修 剩餘undefined
+    if (title != "共同必修") {
+      creditsDiv.innerHTML = `
+        應修 ${credits[title].requiredCredit} 學分，已修 <span style="color:black;">${credits[title].takenCredit}</span> 學分，未修 <span style="color:red;">${credits[title].remainingCredit}</span> 學分
+      `;
+    } else {
+      for (const subcategory of Object.keys(credits[title])) {
+        /**
+         * @typedef {Object} CommonCredit
+         * @property {number} 體育
+         * @property {number} 外文
+         * @property {number} 進階英語
+         * @property {number} 國文
+         * @property {number} 服務學習
+         */
+        if (subcategory === "進階英語" || subcategory === "服務學習") {
+          creditsDiv.innerHTML += `
+            ${subcategory}應修 ${credits[title][subcategory]} 門，已修 ${credits[title][subcategory]} 門，未修 <span style="color:red;">0</span> 門<br />
+          `;
+        } else {
+          creditsDiv.innerHTML += `
+            ${subcategory}應修 ${credits[title][subcategory]} 學分，已修 ${credits[title][subcategory]} 學分，未修 <span style="color:red;">0</span> 學分<br />
+          `;
+        }
+      }
+      creditsDiv.innerHTML = creditsDiv.innerHTML.trim().replace(/<br\s*\/?>\s*$/, "");
+    }
     container.appendChild(creditsDiv);
   }
 

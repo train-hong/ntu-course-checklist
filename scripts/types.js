@@ -57,7 +57,7 @@
  * @typedef {Object} CommonCredit
  * @property {number} 體育
  * @property {number} 外文
- * @property {number} 進階英文課
+ * @property {number} 進階英語
  * @property {number} 國文
  * @property {number} 服務學習
  */
