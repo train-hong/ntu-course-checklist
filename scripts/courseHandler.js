@@ -191,6 +191,7 @@ function addCourseRemarks(credits, courses, generalNeededScope) {
   // 系訂必修
   let reqCourseSet = new Set(REQ_COURSES);
   let haveExperiment = false; // 是否有修習計算機網路實驗/計算機系統實驗
+  let haveChinese = false; 
 
   for (const reqCourse of courses.系訂必修) {
     if (reqCourse.name === "計算機網路實驗" || reqCourse.name === "計算機系統實驗") {
@@ -235,9 +236,12 @@ function addCourseRemarks(credits, courses, generalNeededScope) {
   // 共同必修, 三學分國文
   for (const commonCourse of courses.共同必修) {
     if (commonCourse.category === "國文") {
-      remarks.共同必修 = "國文領域尚缺 3 學分"
+      haveChinese = true;
       break;
     } 
+  }
+  if (!haveChinese) {
+    remarks.共同必修 = "國文領域尚缺 3 學分";
   }
 
   return remarks;
