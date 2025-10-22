@@ -1,4 +1,4 @@
-function extract() {
+export function extract() {
   const rawCourses = { 共同必修課程: [], 系訂必修: [], 通識: [], 指定選修與一般選修: [], 不計學分: [], 輔系課程: [], 雙主修課程: [] };
   const categories = [ "共同必修課程", "系訂必修", "通識", "指定選修與一般選修", "不計學分", "輔系課程", "雙主修課程" ];
 

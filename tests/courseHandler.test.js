@@ -19,38 +19,55 @@ import rawCourses from './extraction.json' assert { type: 'json' };
 import baoBaoRawCourses from './baobao_extraction.json' assert { type: 'json' };
 
 describe('arrangeCourses', () => {
-  // it('should move extra 國文 exceed 3 to 通識 with scopes [1,2,3,4]', () => {
+  const arranged = arrangeCourses(rawCourses);
 
-  //   const result = arrangeCourses(rawCourses);
+  it('should correctly categorize courses from "共同必修課程"', () => {
+    expect(arranged.共同必修.some(c => c.name === '大學國文：閱讀與寫作（一）')).toBe(true);
+    expect(arranged.共同必修.some(c => c.name === '英文一')).toBe(true);
+    expect(arranged.共同必修.some(c => c.name === '英文二')).toBe(true);
+    expect(arranged.共同必修.some(c => c.name === '服務學習甲校內服務')).toBe(true);
+    expect(arranged.共同必修.some(c => c.name === '健康體適能')).toBe(true);
+  });
 
-  //   expect(result.共同必修.filter(c => c.category === '國文').reduce((acc, c) => acc + c.credit, 0)).toBe(3);
-  //   expect(result.通識.filter(c => c.category === '國文').reduce((acc, c) => acc + c.credit, 0)).toBeGreaterThanOrEqual(0);
-  // });
+  it('should correctly categorize courses from "系訂必修"', () => {
+    expect(arranged.系訂必修.some(c => c.name === '微積分1')).toBe(true);
+    expect(arranged.系訂必修.some(c => c.name === '資料結構與演算法')).toBe(true);
+    expect(arranged.系訂必修.some(c => c.name === '普通物理學甲上')).toBe(true);
+  });
 
-  // it('should move 基本能力 to 通識 if 通識 still need credits and 基本能力 in 通識 less than 6, else 一般選修', () => {
-    
-  //   const result = arrangeCourses(baoBaoRawCourses);
+  it('should correctly categorize courses from "通識"', () => {
+    expect(arranged.通識.some(c => c.name === '歐盟莫內講座--經濟貨幣整合：歐盟理論與實證')).toBe(true);
+    expect(arranged.通識.some(c => c.name === '文化人類學丙')).toBe(true);
+  });
 
-  //   expect(result.通識.reduce((acc, c) => acc + c.credit, 0)).toBeLessThanOrEqual(15);
-  //   console.log(`total credits of 通識: ${result.通識.reduce((acc, c) => acc + c.credit, 0)}`);
-  //   expect(result.通識.filter(c => c.category === '基本能力').reduce((acc, c) => acc + c.credit, 0)).toBeLessThanOrEqual(6);
-  //   console.log(`credits of 基本能力 in 通識: ${result.通識.filter(c => c.category === '基本能力').reduce((acc, c) => acc + c.credit, 0)}`);
-  //   console.log(`credits of 基本能力 in 一般選修: ${result.一般選修.filter(c => c.category === '基本能力').reduce((acc, c) => acc + c.credit, 0)}`);
-  //   expect(result.一般選修.filter(c => c.category === '基本能力').reduce((acc, c) => acc + c.credit, 0)).toBeGreaterThanOrEqual(0);
-  // });
+  it('should categorize "指定選修" as "系選修"', () => {
+    expect(arranged.系選修.some(c => c.name === '計算機概論')).toBe(true);
+    expect(arranged.系選修.some(c => c.name === '數位系統與實驗')).toBe(true);
+  });
 
-  // it('should classify 指定選修 to 系選修, and 一般選修 to 一般選修 or 院選修 if course code prefix in COLLEGE_PREFIXES', () => {
-    
-  //   const result = arrangeCourses(rawCourses);
-
-  //   console.log(`院選修: ${result.院選修.map(c => c.name).join(", ")}`);
-  //   expect(result.院選修.every(course => COLLEGE_PREFIXES.some(prefix => course.code.startsWith(prefix)))).toBe(true);
-  // });
+  it('should categorize "一般選修" as "一般選修" or "院選修"', () => {
+    // '日文一上' is not a college course, so it should be in '一般選修'
+    expect(arranged.一般選修.some(c => c.name === '日文一上')).toBe(true);
+    // '去中心化應用程式之設計實務' has code 'NM 5371' which is a college prefix, but it is '指定選修' so it should be in '系選修'
+    expect(arranged.系選修.some(c => c.name === '去中心化應用程式之設計實務')).toBe(true);
+  });
 
   it('should has correct total credits in each category', () => {
     
     const result = arrangeCourses(rawCourses);
 
+    console.log(`credits of 通識: ${result.通識.reduce((acc, c) => acc + c.credit, 0)}`);
+    console.log(`通識: ${result.通識.map(c => c.name).join(", ")}`);
+    console.log(`credits of 系訂必修: ${result.系訂必修.reduce((acc, c) => acc + c.credit, 0)}`);
+    console.log(`系訂必修: ${result.系訂必修.map(c => c.name).join(", ")}`);
+    console.log(`credits of 系選修: ${result.系選修.reduce((acc, c) => acc + c.credit, 0)}`);
+    console.log(`系選修: ${result.系選修.map(c => c.name).join(", ")}`);
+    console.log(`系選修: ${result.系選修.map(c => c.credit).join(", ")}`);
+    console.log(`credits of 院選修: ${result.院選修.reduce((acc, c) => acc + c.credit, 0)}`);
+    console.log(`院選修: ${result.院選修.map(c => c.name).join(", ")}`);
+    console.log(`credits of 一般選修: ${result.一般選修.reduce((acc, c) => acc + c.credit, 0)}`);
+    console.log(`一般選修: ${result.一般選修.map(c => c.name).join(", ")}`);
+    console.log(`一般選修: ${result.一般選修.map(c => c.credit).join(", ")}`);
     expect(result.通識.reduce((acc, c) => acc + c.credit, 0)).toBeGreaterThanOrEqual(GEN_CREDITS);
     expect(result.系訂必修.reduce((acc, c) => acc + c.credit, 0)).toBeGreaterThanOrEqual(DEPT_REQ_CREDITS);
     expect(result.系選修.reduce((acc, c) => acc + c.credit, 0)).toBeGreaterThanOrEqual(DEPT_SEL_CREDITS);
@@ -58,6 +75,7 @@ describe('arrangeCourses', () => {
     expect(result.一般選修.reduce((acc, c) => acc + c.credit, 0)).toBeGreaterThanOrEqual(GEN_SEL_CREDITS);
   });
 });
+
 
 // describe('fulfillGeneralRequirements', () => {
 //   it('should return true if scopes fulfilled', () => {
