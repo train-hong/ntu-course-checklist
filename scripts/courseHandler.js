@@ -109,13 +109,13 @@ function arrangeCourses(rawCourses) {
     }
   }  
   
-  // 系必修 -> 系選修（溢出）
+  // 系訂必修 -> 系選修（溢出）
   if (courses.系訂必修.find(c => c.name == "計算機系統實驗") && courses.系訂必修.find(c => c.name == "計算機網路實驗")) {
     const idx = courses.系訂必修.map(c => c.name).lastIndexOf("計算機網路實驗");
     courses.系選修.push(courses.系訂必修.splice(idx, 1)[0]);
   }
   
-  // 系必修 -> 一般選修（溢出）
+  // 系訂必修 -> 一般選修（溢出）
   let movedGenSciCredits = courses.系訂必修.filter(c => c.name.startsWith("普通")).reduce((acc, c) => acc + c.credit, 0) - 6;
   if (movedGenSciCredits > 0) {
     moveOverflowCredits(courses.系訂必修.filter(c => c.name.startsWith("普通")), courses.一般選修, 6);
@@ -129,6 +129,15 @@ function arrangeCourses(rawCourses) {
 
   // 通識 -> 一般選修
   moveOverflowGenCredits(courses);
+
+  // all 服務學習 in 系訂必修 -> 共同必修
+  for (const course of courses.系訂必修.filter(c => c.name.includes("服務學習"))) {
+    if (course.grade === "通過") {
+      course.category = "服務";
+      const idx = courses.系訂必修.indexOf(course);
+      courses.共同必修.push(courses.系訂必修.splice(idx)[0]);
+    }
+  }
 
   return courses;
 }
